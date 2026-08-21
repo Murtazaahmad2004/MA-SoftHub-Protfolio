@@ -8,8 +8,7 @@
   ],
   "routes": [
     {
-      "src": "/static/(.*)",
-      "continue": true
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
