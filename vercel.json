@@ -8,6 +8,10 @@
   ],
   "routes": [
     {
+      "src": "/static/(.*)",
+      "continue": true
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.php"
     }
