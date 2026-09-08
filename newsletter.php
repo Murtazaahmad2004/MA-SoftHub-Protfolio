@@ -4,7 +4,7 @@ require_once __DIR__ . "/vendor/autoload.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// --------- SUBSCRIBE USER (PDO VERSION) ---------
+// --------- SUBSCRIBE USER ---------
 if(isset($_POST['email'])) {
     $email = trim($_POST['email']);
 
@@ -28,7 +28,7 @@ if(isset($_POST['email'])) {
             
             if($stmt_insert->execute([$email])) {
                 
-                // Email Send Karne ka Process
+                // Send Welcome Email using PHPMailer
                 $mailSent = sendMail(
                     [$email],
                     "Subscription Successful!",
@@ -36,10 +36,9 @@ if(isset($_POST['email'])) {
                 );
 
                 if($mailSent) {
-                    setFlash("Subscribed Successfully and Email Sent!", "success");
+                    setFlash("Subscribed Successfully!", "success");
                 } else {
-                    // Agar database mein save ho gaya par email send nahi hui
-                    setFlash("Subscribed Successfully! (But welcome email failed to send)", "warning");
+                    setFlash("Subscribed Successfully! (But welcome email could not be sent)", "warning");
                 }
 
             } else {
@@ -47,7 +46,6 @@ if(isset($_POST['email'])) {
             }
         }
     } catch (PDOException $e) {
-        // Agar Database ka koi error aayega toh yahan show hoga
         setFlash("Database Error: " . $e->getMessage(), "danger");
     }
 
@@ -64,7 +62,6 @@ function sendMail($recipients, $subject, $body) {
         $mail->Host = "smtp.gmail.com";
         $mail->SMTPAuth = true;
 
-        // Vercel par in variables ka set hona zaroori hai
         $mail->Username = getenv('MAIL_USERNAME');
         $mail->Password = getenv('MAIL_PASSWORD');
 
