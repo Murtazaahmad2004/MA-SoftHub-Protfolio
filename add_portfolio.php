@@ -46,6 +46,7 @@ $stmt = $conn->query("SELECT * FROM portfolio_items ORDER BY id DESC");
 $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
