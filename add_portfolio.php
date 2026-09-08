@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute([$title, $desc, $id]);
 
         $updatedItem = ['title' => $title, 'description' => $desc];
-        // notifySubscribers('Updated', $updatedItem);
+        notifySubscribers('Updated', $updatedItem);
 
         $successMsg = "Portfolio item updated and subscribers notified!";
     } else {
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute([$title, $desc]);
 
         $newItem = ['title' => $title, 'description' => $desc];
-        // notifySubscribers('Added', $newItem);
+        notifySubscribers('Added', $newItem);
 
         $successMsg = "Portfolio item added and subscribers notified!";
     }
@@ -45,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $stmt = $conn->query("SELECT * FROM portfolio_items ORDER BY id DESC");
 $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
