@@ -3,35 +3,29 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$host = "gateway01.ap-southeast-1.prod.aws.tidbcloud.com";
+// Aapke naye TiDB Credentials
+$host = "gateway01.ap-southeast-1.prod.aws.tidbcloud.com"; 
 $username = "3u2Rst12QNYjxiL.root";
 $password = "2J3K4r2pG56zR7F4";
-$db = "sys";
+$db = "masofthub"; // 'sys' ki jagah humne apna database rakha hai
 $port = 4000;
 
 try {
-    // PHP 8.5+ aur TiDB SSL Fix
-    $sslFlag = defined('Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT') 
-        ? \Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT 
-        : PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT;
-
+    // PHP 8.5+ Deprecation warnings ko fix karne ke liye direct SSL codes
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::MYSQL_ATTR_SSL_CA => true, // Enforces secure transport for TiDB
-        $sslFlag => false,
+        1012 => true,   // SSL_CA
+        1014 => false,  // SSL_VERIFY_SERVER_CERT
     ];
 
+    // Connection ban raha hai
     $conn = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4", $username, $password, $options);
-
-    // Automatically tables create karna
-    $conn->exec("CREATE TABLE IF NOT EXISTS portfolio_items (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255) NOT NULL, description TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)");
-    $conn->exec("CREATE TABLE IF NOT EXISTS contact_messages (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL, email VARCHAR(150) NOT NULL, phone VARCHAR(20), message TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-    $conn->exec("CREATE TABLE IF NOT EXISTS newsletter_subscribers (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255) UNIQUE NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-
+    
 } catch(PDOException $e) {
     die("DataBase Connection Failed: " . $e->getMessage());
 }
 
+// Flash messages functions[cite: 2]
 if(!function_exists("setFlash")){
     function setFlash($message, $type='success'){
         $_SESSION['flash'] = ["message" => $message, "type" => $type];
