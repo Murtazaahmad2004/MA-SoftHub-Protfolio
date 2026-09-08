@@ -10,25 +10,28 @@ $password = "2J3K4r2pG56zR7F4";
 $db = "masofthub"; 
 $port = 4000;
 
-// Vercel (AWS) internal SSL path ya aapki cacert.pem ka path
-$vercel_ssl = '/etc/pki/tls/certs/ca-bundle.crt'; // Vercel default path
-$local_ssl = __DIR__ . '/cacert.pem';
+// Vercel aur Local SSL dono ke paths
+$ca_paths = [
+    '/etc/pki/tls/certs/ca-bundle.crt',   // Vercel (AWS Lambda)
+    '/etc/ssl/certs/ca-certificates.crt', // Vercel (Debian)
+    __DIR__ . '/cacert.pem'               // Aapki custom file
+];
 
-if (file_exists($vercel_ssl)) {
-    $cert_path = $vercel_ssl;
-} elseif (file_exists($local_ssl)) {
-    $cert_path = $local_ssl;
-} else {
-    die("SSL ERROR: Vercel par SSL certificate nahi mil raha. Please cacert.pem file ko " . __DIR__ . " mein upload karein.");
+$cert_path = '';
+foreach ($ca_paths as $path) {
+    if (file_exists($path)) {
+        $cert_path = $path;
+        break;
+    }
 }
 
 try {
-    // 1012 = PDO::MYSQL_ATTR_SSL_CA (SSL Certificate Path)
-    // 1014 = PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT (Strict verification bypass)
+    // PHP 8.5+ Support: Agar naya constant available hai toh wo use karega warna purana
+    $ssl_ca_constant = defined('Pdo\Mysql::ATTR_SSL_CA') ? \Pdo\Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA;
+
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        1012 => $cert_path, 
-        1014 => false,      
+        $ssl_ca_constant => $cert_path // Sirf path dena hai, verification ko false nahi karna!
     ];
 
     // Connection ban raha hai
