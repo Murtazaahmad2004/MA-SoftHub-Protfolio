@@ -1,5 +1,5 @@
 <?php
-require 'config.php';   // is file mein $conn hona chahiye (mysqli connection)
+require 'config.php';   
 require 'newsletter.php';
 
 if (!isset($_GET['id'])) {
@@ -9,12 +9,9 @@ if (!isset($_GET['id'])) {
 $id = intval($_GET['id']);
 
 /* -------- FETCH RECORD -------- */
-$stmt = mysqli_prepare($conn, "SELECT * FROM portfolio_items WHERE id = ?");
-mysqli_stmt_bind_param($stmt, "i", $id);
-mysqli_stmt_execute($stmt);
-
-$result = mysqli_stmt_get_result($stmt);
-$item = mysqli_fetch_assoc($result);
+$stmt = $conn->prepare("SELECT * FROM portfolio_items WHERE id = ?");
+$stmt->execute([$id]);
+$item = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$item) {
     die("Record not found");
@@ -26,9 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST['title'];
     $desc  = $_POST['description'];
 
-    $stmt = mysqli_prepare($conn, "UPDATE portfolio_items SET title = ?, description = ? WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "ssi", $title, $desc, $id);
-    mysqli_stmt_execute($stmt);
+    $stmt = $conn->prepare("UPDATE portfolio_items SET title = ?, description = ? WHERE id = ?");
+    $stmt->execute([$title, $desc, $id]);
 
     // ✅ EMAIL NOTIFICATION
     $updatedItem = ['title' => $title, 'description' => $desc];

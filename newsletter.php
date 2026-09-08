@@ -4,7 +4,7 @@ require_once __DIR__ . "/vendor/autoload.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// --------- SUBSCRIBE USER (MySQLi VERSION) ---------
+// --------- SUBSCRIBE USER (SQLite VERSION) ---------
 if(isset($_POST['email'])) {
     $email = trim($_POST['email']);
 
@@ -17,34 +17,29 @@ if(isset($_POST['email'])) {
 
     // Check if email already exists in the database
     $stmt = $conn->prepare("SELECT id FROM newsletter_subscribers WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->store_result();
+    $stmt->execute([$email]);
+    $exists = $stmt->fetchColumn(); 
 
-    if($stmt->num_rows > 0){
+    if($exists){
         setFlash("Email already subscribed", "danger");
         header("Location:index.php");
         exit();
     } else {
         $stmt_insert = $conn->prepare("INSERT INTO newsletter_subscribers (email) VALUES(?)");
-        $stmt_insert->bind_param("s", $email);
         
-        if($stmt_insert->execute()) {
+        if($stmt_insert->execute([$email])) {
             setFlash("Subscribed Successfully!", "success");
 
             // Send Welcome Email using PHPMailer
             sendMail(
                 [$email],
                 "Subscription Successful!",
-                "Thank you for subscribing to our newsletter!<br><br> We're excited to have you on board.<br><br> Stay tuned for the latest updates and exclusive offers.<br><br> Best Regards,<br><br>M.A SoftHub"
+                "Thank you for subscribing to our newsletter!<br><br> We're excited to have you on board.<br><br> Stay tuned for the latest updates and exclusive offers.<br><br> Best Regards,<br><br>M.A SoftHub Team"
             );
         } else {
             setFlash("Subscription Failed. Please try again.", "danger");
         }
-        $stmt_insert->close();
     }
-    $stmt->close();
-
     header("Location:index.php");
     exit();
 }
@@ -89,11 +84,13 @@ function sendMail($recipients, $subject, $body) {
 function notifySubscribers($changeType, $item) {
     global $conn;
 
-    $result = $conn->query("SELECT email FROM newsletter_subscribers");
-    if($result && $result->num_rows > 0) {
-        $email = [];
-        while($s = $result->fetch_assoc()) {
-            $email[] = $s['email'];
+    $stmt = $conn->query("SELECT email FROM newsletter_subscribers");
+    $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if($subscribers) {
+        $emailList = [];
+        foreach($subscribers as $s) {
+            $emailList[] = $s['email'];
         }
 
         $body = "
@@ -102,7 +99,7 @@ function notifySubscribers($changeType, $item) {
         <p><b>Description:</b> {$item['description']}</p>
         ";
 
-        sendMail($email, "Portfolio $changeType: {$item['title']}", $body);
+        sendMail($emailList, "Portfolio $changeType: {$item['title']}", $body);
     }
 }
 ?>

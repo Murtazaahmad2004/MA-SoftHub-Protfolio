@@ -1,33 +1,31 @@
 <?php
-   include 'config.php';
+include 'config.php';
    
-   if(isset($_POST['name']) && isset($_POST['email'])) {
-   
-       $name    = $_POST['name'];
-       $email   = $_POST['email'];
-       $phone   = $_POST['phone'];
-       $message = $_POST['message'];
-   
-       $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, phone, message) VALUES (?, ?, ?, ?)");
-       if($stmt){
-   
-           $stmt->bind_param("ssss", $name, $email, $phone, $message);
-   
-           if($stmt->execute()){
-               setFlash("Data submitted successfully! We will contact you soon.", "success");
-           } else {
-               setFlash("There was an error submitting your message. Please try again.", "danger");
-           }
-           $stmt->close();
-       } else {
-           setFlash("Database error occurred.", "danger");
-       }
-   
-       header("Location: index.php#contact");
-       exit();
-   }
-   $flash = getFlash();
-   ?>
+if(isset($_POST['name']) && isset($_POST['email'])) {
+
+    $name    = $_POST['name'];
+    $email   = $_POST['email'];
+    $phone   = $_POST['phone'];
+    $message = $_POST['message'];
+
+    try {
+        $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, phone, message) VALUES (?, ?, ?, ?)");
+        
+        if($stmt->execute([$name, $email, $phone, $message])){
+            setFlash("Data submitted successfully! We will contact you soon.", "success");
+        } else {
+            setFlash("There was an error submitting your message. Please try again.", "danger");
+        }
+    } catch (PDOException $e) {
+        setFlash("Database error occurred.", "danger");
+    }
+
+    header("Location: index.php#contact");
+    exit();
+}
+$flash = getFlash();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
    <head>

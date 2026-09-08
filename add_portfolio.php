@@ -6,9 +6,8 @@ require 'newsletter.php';
 if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
 
-    $stmt = mysqli_prepare($conn, "DELETE FROM portfolio_items WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $id);
-    mysqli_stmt_execute($stmt);
+    $stmt = $conn->prepare("DELETE FROM portfolio_items WHERE id = ?");
+    $stmt->execute([$id]);
 
     header("Location: add_portfolio.php");
     exit;
@@ -23,9 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($id) {
         // UPDATE
-        $stmt = mysqli_prepare($conn, "UPDATE portfolio_items SET title = ?, description = ? WHERE id = ?");
-        mysqli_stmt_bind_param($stmt, "ssi", $title, $desc, $id);
-        mysqli_stmt_execute($stmt);
+        $stmt = $conn->prepare("UPDATE portfolio_items SET title = ?, description = ? WHERE id = ?");
+        $stmt->execute([$title, $desc, $id]);
 
         $updatedItem = ['title' => $title, 'description' => $desc];
         notifySubscribers('Updated', $updatedItem);
@@ -33,9 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $successMsg = "Portfolio item updated and subscribers notified!";
     } else {
         // INSERT
-        $stmt = mysqli_prepare($conn, "INSERT INTO portfolio_items (title, description) VALUES (?, ?)");
-        mysqli_stmt_bind_param($stmt, "ss", $title, $desc);
-        mysqli_stmt_execute($stmt);
+        $stmt = $conn->prepare("INSERT INTO portfolio_items (title, description) VALUES (?, ?)");
+        $stmt->execute([$title, $desc]);
 
         $newItem = ['title' => $title, 'description' => $desc];
         notifySubscribers('Added', $newItem);
@@ -45,10 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 /* ---------------- FETCH ALL ---------------- */
-$result = mysqli_query($conn, "SELECT * FROM portfolio_items ORDER BY id DESC");
-$items = mysqli_fetch_all($result, MYSQLI_ASSOC);
+$stmt = $conn->query("SELECT * FROM portfolio_items ORDER BY id DESC");
+$items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
