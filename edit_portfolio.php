@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // ✅ EMAIL NOTIFICATION
     $updatedItem = ['title' => $title, 'description' => $desc];
-    notifySubscribers('Updated', $updatedItem);
+    // notifySubscribers('Updated', $updatedItem);
 
     header("Location: add_portfolio.php");
     exit;
