@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 $host = "gateway01.ap-southeast-1.prod.aws.tidbcloud.com";
 $username = "3u2Rst12QNYjxiL.root";
 $password = "2J3K4r2pG56zR7F4";
-$db = "sql12835715";
+$db = "sys";
 $port = 4000;
 
 try {
