@@ -1,5 +1,6 @@
-CREATE DATABASE php_portfolio;
-USE php_portfolio;
+CREATE DATABASE IF NOT EXISTS masofthub;
+USE masofthub;
+
 CREATE TABLE newsletter_subscribers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
