@@ -10,15 +10,25 @@ $password = "2J3K4r2pG56zR7F4";
 $db = "masofthub"; 
 $port = 4000;
 
+// Vercel (AWS) internal SSL path ya aapki cacert.pem ka path
+$vercel_ssl = '/etc/pki/tls/certs/ca-bundle.crt'; // Vercel default path
+$local_ssl = __DIR__ . '/cacert.pem';
+
+if (file_exists($vercel_ssl)) {
+    $cert_path = $vercel_ssl;
+} elseif (file_exists($local_ssl)) {
+    $cert_path = $local_ssl;
+} else {
+    die("SSL ERROR: Vercel par SSL certificate nahi mil raha. Please cacert.pem file ko " . __DIR__ . " mein upload karein.");
+}
+
 try {
-    // Hamari apni download ki hui SSL file ka rasta
-    $ssl_cert = __DIR__ . '/cacert.pem';
-    
-    // PHP 8.5+ Deprecation Warnings bypass karne ke liye integer codes (1012) use kiye hain
+    // 1012 = PDO::MYSQL_ATTR_SSL_CA (SSL Certificate Path)
+    // 1014 = PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT (Strict verification bypass)
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        1012 => $ssl_cert, // 1012 = PDO::MYSQL_ATTR_SSL_CA
-        1014 => false,     // 1014 = PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT
+        1012 => $cert_path, 
+        1014 => false,      
     ];
 
     // Connection ban raha hai
@@ -28,7 +38,7 @@ try {
     die("DataBase Connection Failed: " . $e->getMessage());
 }
 
-// Flash messages functions
+// Flash messages functions[cite: 2]
 if(!function_exists("setFlash")){
     function setFlash($message, $type='success'){
         $_SESSION['flash'] = ["message" => $message, "type" => $type];
