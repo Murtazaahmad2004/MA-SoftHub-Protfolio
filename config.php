@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 // SQLite Database Connection (PDO)
 try {
     // Yeh script ke folder mein hi 'database.sqlite' file bana dega
-    $conn = new PDO('sqlite:' . __DIR__ . '/masofthub.sqlite');
+    $conn = new PDO('sqlite:' . __DIR__ . '/masofthub.db');
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     // Automatically create tables if they don't exist
