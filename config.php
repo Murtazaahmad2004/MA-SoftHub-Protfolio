@@ -10,32 +10,16 @@ $password = "2J3K4r2pG56zR7F4";
 $db = "masofthub"; 
 $port = 4000;
 
-// Vercel / Cloud server ke andar built-in SSL certificates ka path dhoondna
-$ca_paths = [
-    '/etc/ssl/certs/ca-certificates.crt', // Vercel / Debian / Ubuntu
-    '/etc/pki/tls/certs/ca-bundle.crt',   // Amazon Linux
-    '/usr/local/etc/openssl/cert.pem'     // Custom environments
-];
-
-$ssl_ca = '';
-foreach ($ca_paths as $path) {
-    if (file_exists($path)) {
-        $ssl_ca = $path;
-        break;
-    }
-}
-
 try {
+    // Hamari apni download ki hui SSL file ka rasta
+    $ssl_cert = __DIR__ . '/cacert.pem';
+    
+    // PHP 8.5+ Deprecation Warnings bypass karne ke liye integer codes (1012) use kiye hain
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        1012 => $ssl_cert, // 1012 = PDO::MYSQL_ATTR_SSL_CA
+        1014 => false,     // 1014 = PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT
     ];
-    
-    // Agar server par SSL file mil jaye toh usay secure connection ke liye use karein
-    if ($ssl_ca) {
-        $options[1012] = $ssl_ca;  // 1012 = SSL_CA (Path dena zaroori tha, "true" nahi)
-    }
-    
-    $options[1014] = false; // 1014 = SSL_VERIFY_SERVER_CERT (Strict verification bypass)
 
     // Connection ban raha hai
     $conn = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4", $username, $password, $options);
@@ -44,7 +28,7 @@ try {
     die("DataBase Connection Failed: " . $e->getMessage());
 }
 
-// Flash messages functions[cite: 2]
+// Flash messages functions
 if(!function_exists("setFlash")){
     function setFlash($message, $type='success'){
         $_SESSION['flash'] = ["message" => $message, "type" => $type];
