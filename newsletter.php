@@ -17,7 +17,7 @@ if (isset($_POST['email'])) {
     // Check email is valid or invalid
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         setFlash("Invalid Email Address", "danger");
-        header("Location: index.php");
+        header("Location: index.php#newsletter");
         exit();
     }
 
@@ -55,12 +55,12 @@ if (isset($_POST['email'])) {
         setFlash("Database Error: " . $e->getMessage(), "danger");
     }
 
-    header("Location: index.php");
+    header("Location: index.php#newsletter");
     exit();
 }
 
 // --------- COMMON MAIL FUNCTION ---------
-function sendMail($recipients, $subject, $body) {
+function sendMail(array $recipients, string $subject, string $body): bool {
     $mail = new PHPMailer(true);
 
     try {
@@ -97,7 +97,7 @@ function sendMail($recipients, $subject, $body) {
 }
 
 // --------- NOTIFY ALL SUBSCRIBERS ---------
-function notifySubscribers($changeType, $item) {
+function notifySubscribers(string $changeType, array $item): void {
     global $conn;
 
     try {

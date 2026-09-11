@@ -12,9 +12,9 @@ $port = 4000;
 
 // Vercel aur Local SSL dono ke paths
 $ca_paths = [
-    '/etc/pki/tls/certs/ca-bundle.crt',   // Vercel (AWS Lambda)
+    '/etc/pki/tls/certs/ca-bundle.crt',    // Vercel (AWS Lambda)
     '/etc/ssl/certs/ca-certificates.crt', // Vercel (Debian)
-    __DIR__ . '/cacert.pem'               // Aapki custom file
+    __DIR__ . '/cacert.pem'              // Aapki custom file
 ];
 
 $cert_path = '';
@@ -41,9 +41,10 @@ try {
     die("DataBase Connection Failed: " . $e->getMessage());
 }
 
-// Flash messages functions[cite: 2]
+// Flash messages functions
+// Flash messages functions
 if(!function_exists("setFlash")){
-    function setFlash($message, $type='success'){
+    function setFlash(string $message, string $type = 'success'): void {
         $_SESSION['flash'] = ["message" => $message, "type" => $type];
     }
 }
