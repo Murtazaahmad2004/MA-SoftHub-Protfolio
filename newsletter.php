@@ -68,11 +68,8 @@ function sendMail($recipients, $subject, $body) {
         $mail->Host = "smtp.gmail.com";
         $mail->SMTPAuth = true;
 
-        // $mail->Username = getenv('MAIL_USERNAME');
-        // $mail->Password = getenv('MAIL_PASSWORD');
-
-        $mail->Username = "masofthub@gmail.com";
-        $mail->Password = "zuwx gagc wkjn tunf";
+        $mail->Username = getenv('MAIL_USERNAME');
+        $mail->Password = getenv('MAIL_PASSWORD');
 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port = 465;
