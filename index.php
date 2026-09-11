@@ -230,7 +230,7 @@ $flash = getFlash();
          </div>
       </nav>
       <!-- HERO SECTION -->
-      <div id="home" class="hero-section" data-aos="fade-down">
+      <!-- <div id="home" class="hero-section" data-aos="fade-down">
          <div class="container">
             <div class="row">
                <div class="col-md-6">
@@ -604,7 +604,7 @@ $flash = getFlash();
                      <li><a href="#about">About</a></li>
                      <li><a href="#contact">Contact</a></li>
                   </ul>
-               </div>
+               </div> -->
                <div class="col-md-5 mb-4">
                   <h5 class="footer-heading">Newsletter</h5>
                   <p class="footer-desc">Subscribe to our newsletter for the latest updates and offers.</p>
