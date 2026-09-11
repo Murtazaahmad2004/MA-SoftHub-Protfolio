@@ -1,15 +1,21 @@
 <?php
+// Errors on kar rahe hain taake agar koi masla ho to screen par nazar aaye
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once "config.php";
 require_once __DIR__ . "/vendor/autoload.php";
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 // --------- SUBSCRIBE USER (PDO / TiDB VERSION) ---------
-if(isset($_POST['email'])) {
+if (isset($_POST['email'])) {
     $email = trim($_POST['email']);
 
     // Check email is valid or invalid
-    if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         setFlash("Invalid Email Address", "danger");
         header("Location: index.php");
         exit();
@@ -21,21 +27,21 @@ if(isset($_POST['email'])) {
         $stmt->execute([$email]);
         $exists = $stmt->fetchColumn(); 
 
-        if($exists){
+        if ($exists) {
             setFlash("Email already subscribed", "danger");
         } else {
-            $stmt_insert = $conn->prepare("INSERT INTO newsletter_subscribers (email) VALUES(?)");
+            $stmt_insert = $conn->prepare("INSERT INTO newsletter_subscribers (email) VALUES (?)");
             
-            if($stmt_insert->execute([$email])) {
+            if ($stmt_insert->execute([$email])) {
                 
                 // Send Welcome Email using PHPMailer
                 $mailSent = sendMail(
                     [$email],
                     "Subscription Successful!",
-                    "Thank you for subscribing to our newsletter!<br><br> We're excited to have you on board.<br><br> Stay tuned for the latest updates and exclusive offers.<br><br> Best Regards,<br><br>M.A SoftHub Team"
+                    "Thank you for subscribing to our newsletter!<br><br>We're excited to have you on board.<br><br>Stay tuned for the latest updates and exclusive offers.<br><br>Best Regards,<br><br>M.A SoftHub Team"
                 );
 
-                if($mailSent) {
+                if ($mailSent) {
                     setFlash("Subscribed Successfully!", "success");
                 } else {
                     setFlash("Subscribed Successfully! (But welcome email failed to send)", "warning");
@@ -74,7 +80,7 @@ function sendMail($recipients, $subject, $body) {
             'M.A SoftHub'
         );
 
-        foreach($recipients as $r) {
+        foreach ($recipients as $r) {
             $mail->addAddress($r);
         }
 
@@ -84,7 +90,7 @@ function sendMail($recipients, $subject, $body) {
 
         return $mail->send();
 
-    } catch(Exception $e) {
+    } catch (Exception $e) {
         error_log("Mail Error: " . $mail->ErrorInfo);
         return false;
     }
@@ -98,9 +104,9 @@ function notifySubscribers($changeType, $item) {
         $stmt = $conn->query("SELECT email FROM newsletter_subscribers");
         $subscribers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if($subscribers) {
+        if ($subscribers) {
             $emailList = [];
-            foreach($subscribers as $s) {
+            foreach ($subscribers as $s) {
                 $emailList[] = $s['email'];
             }
 
