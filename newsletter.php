@@ -1,17 +1,4 @@
 <?php
-
-// --- DEBUG TEST CODE ---
-echo "POST Data: <br>";
-print_r($_POST);
-echo "<br><br>Database Connection Check: ";
-require_once "config.php";
-if (isset($conn)) {
-    echo "Connected Successfully!<br>";
-} else {
-    echo "Connection Failed!<br>";
-}
-exit(); // Yahin rokk dein taake agla code na chalay aur output dikhe
-
 // Errors on kar rahe hain taake agar koi masla ho to screen par nazar aaye
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -81,8 +68,11 @@ function sendMail($recipients, $subject, $body) {
         $mail->Host = "smtp.gmail.com";
         $mail->SMTPAuth = true;
 
-        $mail->Username = getenv('MAIL_USERNAME');
-        $mail->Password = getenv('MAIL_PASSWORD');
+        // $mail->Username = getenv('MAIL_USERNAME');
+        // $mail->Password = getenv('MAIL_PASSWORD');
+
+        $mail->Username = "masofthub@gmail.com";
+        $mail->Password = "zuwx gagc wkjn tunf";
 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port = 465;
