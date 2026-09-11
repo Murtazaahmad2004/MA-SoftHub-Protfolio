@@ -67,8 +67,6 @@ function sendMail($recipients, $subject, $body) {
 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port = 465;
-
-        // Timeout badha diya hai taake Vercel par connection drop na ho
         $mail->Timeout = 10; 
 
         $mail->setFrom(
