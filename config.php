@@ -1,61 +1,165 @@
 <?php
-session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
-// Aapke TiDB Credentials
-$host = "gateway01.ap-southeast-1.prod.aws.tidbcloud.com"; 
+session_start();
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+/*
+|--------------------------------------------------------------------------
+| TiDB Cloud Database Configuration
+|--------------------------------------------------------------------------
+*/
+
+$host = "gateway01.ap-southeast-1.prod.aws.tidbcloud.com";
+
 $username = "3u2Rst12QNYjxiL.root";
+
 $password = "2J3K4r2pG56zR7F4";
-$db = "masofthub"; 
+
+$db = "masofthub";
+
 $port = 4000;
 
-// Vercel aur Local SSL dono ke paths
+
+/*
+|--------------------------------------------------------------------------
+| SSL Certificate
+|--------------------------------------------------------------------------
+*/
+
 $ca_paths = [
-    '/etc/pki/tls/certs/ca-bundle.crt',    // Vercel (AWS Lambda)
-    '/etc/ssl/certs/ca-certificates.crt', // Vercel (Debian)
-    __DIR__ . '/cacert.pem'              // Aapki custom file
+
+    "/etc/pki/tls/certs/ca-bundle.crt",
+
+    "/etc/ssl/certs/ca-certificates.crt",
+
+    __DIR__ . "/cacert.pem"
+
 ];
 
-$cert_path = '';
+$cert_path = "";
+
 foreach ($ca_paths as $path) {
+
     if (file_exists($path)) {
+
         $cert_path = $path;
+
         break;
+
     }
+
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Database Connection
+|--------------------------------------------------------------------------
+*/
 
 try {
-    // PHP 8.5+ Support: Agar naya constant available hai toh wo use karega warna purana
-    $ssl_ca_constant = defined('Pdo\Mysql::ATTR_SSL_CA') ? \Pdo\Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA;
+
+    $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
 
     $options = [
+
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        $ssl_ca_constant => $cert_path // Sirf path dena hai, verification ko false nahi karna!
+
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+
+        PDO::ATTR_EMULATE_PREPARES => false
+
     ];
 
-    // Connection ban raha hai
-    $conn = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4", $username, $password, $options);
-    
-} catch(PDOException $e) {
-    die("DataBase Connection Failed: " . $e->getMessage());
-}
+    if (!empty($cert_path)) {
 
-// Flash messages functions
-// Flash messages functions
-if(!function_exists("setFlash")){
-    function setFlash(string $message, string $type = 'success'): void {
-        $_SESSION['flash'] = ["message" => $message, "type" => $type];
-    }
-}
+        if (defined("Pdo\Mysql::ATTR_SSL_CA")) {
 
-if(!function_exists("getFlash")){
-    function getFlash(){
-        if(isset($_SESSION['flash'])){
-            $flash = $_SESSION['flash'];
-            unset($_SESSION['flash']);
-            return $flash;
+            $options[\Pdo\Mysql::ATTR_SSL_CA] = $cert_path;
+
+        } else {
+
+            $options[PDO::MYSQL_ATTR_SSL_CA] = $cert_path;
+
         }
+
     }
+
+    $conn = new PDO(
+
+        $dsn,
+
+        $username,
+
+        $password,
+
+        $options
+
+    );
+
+} catch (PDOException $e) {
+
+    die(
+
+        "Database Connection Failed: " .
+
+        htmlspecialchars($e->getMessage())
+
+    );
+
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Flash Messages
+|--------------------------------------------------------------------------
+*/
+
+if (!function_exists("setFlash")) {
+
+    function setFlash(
+
+        string $message,
+
+        string $type = "success"
+
+    ): void {
+
+        $_SESSION["flash"] = [
+
+            "message" => $message,
+
+            "type" => $type
+
+        ];
+
+    }
+
+}
+
+
+if (!function_exists("getFlash")) {
+
+    function getFlash(): ?array {
+
+        if (isset($_SESSION["flash"])) {
+
+            $flash = $_SESSION["flash"];
+
+            unset($_SESSION["flash"]);
+
+            return $flash;
+
+        }
+
+        return null;
+
+    }
+
+}
+
 ?>
