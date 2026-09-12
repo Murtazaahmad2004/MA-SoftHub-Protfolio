@@ -125,11 +125,6 @@ $flash = getFlash();
          .social-links a { color:#fff; margin-right:20px; font-size:20px; transition:0.3s; }
          .social-links a.gmail:hover { color:#EA4335; } /* Gmail red */
          .social-links a.whatsapp:hover { color: #25D366; } /* WhatsApp green */
-         .newsletter-form .newsletter-input { width: 100%; height: 45px; padding: 10px 18px; border: none; outline: none; border-radius: 40px; font-size: 15px; background-color: #ffffff; color: #000;}
-         .newsletter-form .input-group { display: column; margin-left: 10px; }
-         .newsletter-form .btn-subscribe { border-radius: 40px; margin-left: 10px; }
-         .btn-subscribe { background-color:#0d6efd; color:#fff; border:none; padding:10px 25px; border-radius:40px; font-weight:500; margin-top:10px; }
-         .btn-subscribe:hover { background-color:#0b5ed7; color:#fff; }
          .footer-divider { border-top:1px solid rgba(255, 255, 255, 255); margin:40px 0 20px 0; }
          .copyright { color:#cbd5e0; margin-bottom:0; }
          /* ===== MODALS ===== */
@@ -604,16 +599,6 @@ $flash = getFlash();
                      <li><a href="#about">About</a></li>
                      <li><a href="#contact">Contact</a></li>
                   </ul>
-               </div>
-               <div class="col-md-5 mb-4">
-                  <h5 class="footer-heading">Newsletter</h5>
-                  <p class="footer-desc">Subscribe to our newsletter for the latest updates and offers.</p>
-                  <form class="newsletter-form mt-3" method="POST" action="newsletter.php">
-                     <div class="input-group">
-                        <input type="email" name="email" class="newsletter-input" placeholder="Your Email" required>
-                        <button class="btn-subscribe" type="submit">Subscribe</button>
-                     </div>
-                  </form>
                </div>
             </div>
             <hr class="footer-divider">
