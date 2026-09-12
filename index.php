@@ -67,7 +67,7 @@ $flash = getFlash();
          .navbar-toggle { display: none; margin-top: 20px; color: #fff; background-color: white !important; }
          .navbar-toggle .icon-bar { background-color: #fff; }
          /* ===== HERO ===== */
-         .hero-section { background: linear-gradient(135deg, #0F172A, #0B5ED7, #0DCAF0); background-attachment: scroll; will-change: transform; background-size: cover; color: white; padding: 80px 25px; margin-top: 5000px; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); text-align: center; }
+         .hero-section { background: linear-gradient(135deg, #0F172A, #0B5ED7, #0DCAF0); background-attachment: scroll; will-change: transform; background-size: cover; color: white; padding: 80px 25px; margin-top: 50px; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); text-align: center; }
          .hero-section h1 { font-size: 40px; font-weight: bold; margin-bottom: 20px; min-height: 110px; }
          .hero-section p { font-weight: 200; font-size: 24px; max-width: 600px; margin: 0 auto 20px; }
          .hero-section .btn { background: #fff; border-radius: 50px; padding: 10px 15px; width: 150px; font-size: 18px; color: #000; font-weight: bold; }
