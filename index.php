@@ -606,15 +606,15 @@ $flash = getFlash();
                   </ul>
                </div>
                <div class="col-md-5 mb-4">
-               <h5 class="footer-heading" id="newsletter">Newsletter</h5>
-               <p class="footer-desc">Subscribe to our newsletter for the latest updates and offers.</p>
-               <form class="newsletter-form mt-3" method="POST" action="newsletter.php">
-                  <div class="input-group" style="display: flex;">
-                        <input type="email" name="email" class="newsletter-input form-control" placeholder="Your Email" required>
-                        <button class="btn-subscribe btn btn-primary" type="submit">Subscribe</button>
-                  </div>
-               </form>
-            </div>
+                  <h5 class="footer-heading">Newsletter</h5>
+                  <p class="footer-desc">Subscribe to our newsletter for the latest updates and offers.</p>
+                  <form class="newsletter-form mt-3" method="POST" action="newsletter.php">
+                     <div class="input-group">
+                        <input type="email" name="email" class="newsletter-input" placeholder="Your Email" required>
+                        <button class="btn-subscribe" type="submit">Subscribe</button>
+                     </div>
+                  </form>
+               </div>
             </div>
             <hr class="footer-divider">
             <div class="row">
