@@ -68,15 +68,17 @@ function sendMail(array $recipients, string $subject, string $body): bool {
         $mail->Host = "smtp.gmail.com";
         $mail->SMTPAuth = true;
 
+        // Yahan apni direct details daal dein
         $mail->Username = 'masofthub@gmail.com';
-        $mail->Password = 'rwrb xcaa npcr oczp';
+        $mail->Password = 'rwrb xcaa npcr oczp'; // Yahan apna App Password likhein
 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port = 465;
         $mail->Timeout = 10; 
 
+        // Yahan bhi getenv() hata kar direct email likh dein
         $mail->setFrom(
-            getenv('MAIL_USERNAME'),
+            'masofthub@gmail.com',
             'M.A SoftHub'
         );
 
