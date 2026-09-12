@@ -14,9 +14,9 @@ error_reporting(E_ALL);
 
 $host = "gateway01.ap-southeast-1.prod.aws.tidbcloud.com";
 
-$username = "3u2Rst12QNYjxiL.root";
+$username = getenv("DB_USERNAME");
 
-$password = "2J3K4r2pG56zR7F4";
+$password = getenv("DB_PASSWORD");
 
 $db = "masofthub";
 
